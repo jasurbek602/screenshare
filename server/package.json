@@ -1,0 +1,12 @@
+{
+  "name": "screenshare-server",
+  "version": "1.0.0",
+  "description": "Android ekran ulashish demo ilovasi uchun oddiy WebSocket server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Ekran ulashish - Viewer</title>
+    <style>
+        body { background: #111; color: #eee; font-family: sans-serif; text-align: center; }
+        img { max-width: 95%; border: 2px solid #444; margin-top: 20px; }
+        #status { margin-top: 10px; color: #8f8; }
+    </style>
+</head>
+<body>
+    <h2>Uzatilayotgan ekran</h2>
+    <div id="status">Ulanmoqda...</div>
+    <img id="screen" alt="Kadr kutilmoqda..." />
+
+    <script>
+        const ws = new WebSocket('ws://' + location.host);
+        const img = document.getElementById('screen');
+        const status = document.getElementById('status');
+
+        ws.onopen = () => {
+            status.textContent = 'Ulandi. Kadrlar kutilmoqda...';
+            // Serverga "men viewerman" deb signal beramiz
+            ws.send('viewer');
+        };
+
+        ws.onmessage = (event) => {
+            if (event.data instanceof Blob) {
+                const url = URL.createObjectURL(event.data);
+                img.onload = () => URL.revokeObjectURL(url);
+                img.src = url;
+                status.textContent = 'Jonli uzatish faol — ' + new Date().toLocaleTimeString();
+            }
+        };
+
+        ws.onclose = () => {
+            status.textContent = 'Ulanish uzildi.';
+        };
+    </script>
+</body>
+</html>
